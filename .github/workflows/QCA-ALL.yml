@@ -33,9 +33,14 @@ jobs:
     name: ${{matrix.CONFIG}}
     strategy:
       fail-fast: false
-      #max-parallel: 3
       matrix:
-        CONFIG: [IPQ60XX-WIFI-YES, IPQ60XX-WIFI-NO, IPQ807X-WIFI-YES, IPQ807X-WIFI-NO]
+        # 原本是 4 档：IPQ60XX/807X × WIFI-YES/NO。
+        # 只留 IPQ60XX-WIFI-YES —— 雅典娜属于这一档，其余三档编了也用不上。
+        # 注意：WIFI-NO 会把 kmod-ath11k* 与 ath11k-firmware-* 全部置 n（纯有线旁路由用），
+        #      千万不要用那个。
+        CONFIG: [IPQ60XX-WIFI-YES]
+        # 源码第一次别换。VIKINGYFY/immortalwrt 的默认分支就是 owrt，
+        # 而 owrt 是四个 workflow 唯一指向的分支，也是你机器现在所跑固件的来源。
         SOURCE: [VIKINGYFY/immortalwrt]
         BRANCH: [owrt]
 
@@ -48,10 +53,11 @@ jobs:
       WRT_THEME: aurora
       #默认主机名
       WRT_NAME: OWRT
-      #默认WIFI名称
+      #默认WIFI名称（实际 SSID 会是 OWRT-5.8G / OWRT-2.4G / OWRT-5.2G，
+      #由 Scripts/PRIVATE.sh 拼出来后缀）
       WRT_SSID: OWRT
-      #默认WIFI密码
-      WRT_WORD: 12345678
+      #默认WIFI密码 <- 三个 AP 的口令。若 fork 是公开仓库，这行等于公开你的 WiFi 口令
+      WRT_WORD: wh8mRBs7eWdJ
       #默认地址
       WRT_IP: 192.168.10.1
       #默认密码，仅作提示，修改无用
